@@ -130,9 +130,6 @@ int main(void) {
             int ro = (int) (roll * 10);
             int ya = (int) (yaw * 10);
 
-            //unsigned char toChar[20];
-            //convertStrToUnChar(pChar, toChar);
-
             LCD1602_ClearScreen();
             LCD1602_Show_Str(0, 0, "Mpu6050");
             LCD1602_Show_Str_Printf(0, 1, "%d %d %d", pi, ro, ya);
@@ -186,6 +183,52 @@ void SystemClock_Config(void) {
 
 /* USER CODE BEGIN 4 */
 
+// -----------------------
+
+/**
+  * @brief GPIO EXTI callback
+  * @param None
+  * @retval None
+  */
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
+    /* Clear Wake Up Flag */
+}
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
+
+    // 1ms
+    if (htim->Instance == htim3.Instance) {
+        //编写回调逻辑，即定时器1定时1MS后的逻辑
+        static int i = 0, state = 0, is = 0, k = 0;
+
+        if (i < 100) i++;
+        else {
+            i = 0;
+            if (k == 0) {
+                if (is < 100) is++;
+                else k = 1;
+            } else {
+                if (is > 0) is--;
+                else k = 0;
+            }
+        }
+
+        if (i <= is) {
+            state = 0;
+        } else {
+            state = 1;
+        }
+
+        if (state == 0) {
+            HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
+            HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_SET);
+        } else {
+            HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
+            HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_RESET);
+        }
+
+    }
+}
 // -----------------------
 
 /* USER CODE END 4 */

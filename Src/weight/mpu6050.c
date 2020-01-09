@@ -9,8 +9,8 @@
 #include <tim.h>
 #include <LCD1602.h>
 
-#include "eMPL/inv_mpu.h"
-#include "eMPL/inv_mpu_dmp_motion_driver.h"
+#include "../eMPL/inv_mpu.h"
+#include "../eMPL/inv_mpu_dmp_motion_driver.h"
 
 //陀螺仪方向设置
 static signed char gyro_orientation[9] = {1, 0, 0,
@@ -347,9 +347,9 @@ unsigned char run_self_test(void) {
 }
 
 //得到dmp处理后的数据(注意,本函数需要比较多堆栈,局部变量有点多)
-//pitch:俯仰角 精度:0.1°   范围:-90.0° <---> +90.0°
-//roll:横滚角  精度:0.1°   范围:-180.0°<---> +180.0°
-//yaw:航向角   精度:0.1°   范围:-180.0°<---> +180.0°
+//pitch:俯仰角 精度:0.1°   范围:-90.0° <---> +90.0°  y
+//roll: 横滚角 精度:0.1°   范围:-180.0°<---> +180.0° x
+//yaw:  航向角 精度:0.1°   范围:-180.0°<---> +180.0° z 飞机和航天飞机的纵轴与地球北极之间的夹角
 //返回值:0,正常
 //    其他,失败
 unsigned char mpu_dmp_get_data(float *pitch, float *roll, float *yaw) {
@@ -380,50 +380,4 @@ unsigned char mpu_dmp_get_data(float *pitch, float *roll, float *yaw) {
         *yaw = atan2(2 * (q1 * q2 + q0 * q3), q0 * q0 + q1 * q1 - q2 * q2 - q3 * q3) * 57.3;    //yaw
     } else return 2;
     return 0;
-}
-// -----------------------
-
-/**
-  * @brief GPIO EXTI callback
-  * @param None
-  * @retval None
-  */
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
-    /* Clear Wake Up Flag */
-}
-
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
-
-    // 1ms
-    if (htim->Instance == htim3.Instance) {
-        //编写回调逻辑，即定时器1定时1MS后的逻辑
-        static int i = 0, state = 0, is = 0, k = 0;
-
-        if (i < 100) i++;
-        else {
-            i = 0;
-            if (k == 0) {
-                if (is < 100) is++;
-                else k = 1;
-            } else {
-                if (is > 0) is--;
-                else k = 0;
-            }
-        }
-
-        if (i <= is) {
-            state = 0;
-        } else {
-            state = 1;
-        }
-
-        if (state == 0) {
-            HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
-            HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_SET);
-        } else {
-            HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
-            HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_RESET);
-        }
-
-    }
 }
