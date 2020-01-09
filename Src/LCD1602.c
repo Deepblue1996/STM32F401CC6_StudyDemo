@@ -148,3 +148,16 @@ void LCD1602_Show_Str_Printf(u8 x, u8 y, u8 *str, ...) {
 
     LCD1602_Show_Str(x, y, pStr);
 }
+
+void printfEx(const char *str, ...) {
+    u8 pStr[sizeof(str)*10];
+    va_list args;
+    int n;
+
+    va_start(args, str);
+    n = vsprintf(pStr, str, args);
+    va_end(args);
+
+    LCD1602_ClearScreen();
+    LCD1602_Show_Str(0, 0, pStr);
+}

@@ -37,6 +37,7 @@ void LCD1602_Set_Cursor(u8 x, u8 y);
 void LCD1602_Show_Str(u8 x, u8 y, u8 *str);
 void LCD1602_Init(void);
 void LCD1602_Show_Str_Printf(u8 x, u8 y, u8 *str, ...);
+void printfEx(const char *str, ...);
 /***********************************º¯Êý¶¨Òå********************************************/
 
 #endif //HELLOSTM_LCD1602_H

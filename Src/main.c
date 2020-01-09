@@ -44,18 +44,6 @@ void SystemClock_Config(void);
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-void printfEx(const char *str, ...) {
-    u8 pStr[sizeof(str)*10];
-    va_list args;
-    int n;
-
-    va_start(args, str);
-    n = vsprintf(pStr, str, args);
-    va_end(args);
-
-    LCD1602_ClearScreen();
-    LCD1602_Show_Str(0, 0, pStr);
-}
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -80,7 +68,6 @@ float pitch, roll, yaw;        //欧拉角
   */
 int main(void) {
     /* USER CODE BEGIN 1 */
-    unsigned char DMP_INT_FLAG = 0;
     unsigned char rev_flag = 0;
     /* USER CODE END 1 */
 
@@ -113,44 +100,7 @@ int main(void) {
     HAL_Delay(10);
     LCD1602_Init();
 
-    //LCD1602_Show_Str(0, 0, "Mpu6050 Init");
-    printfEx("Mpu6050 Init");
-
-    HAL_Delay(100);
-
-    MPU_6050_Init();// 可以尝试 直接打开FIFO
-
-    HAL_Delay(100);
-    //初始化DMP
-    DMP_INT_FLAG = mpu_dmp_init();
-
-    LCD1602_ClearScreen();
-    if (DMP_INT_FLAG != 0) {
-        int tru = 1;
-        printfEx("DMP_INT_FLAG %d", DMP_INT_FLAG);
-        while (1) {
-            HAL_Delay(100);
-
-            printfEx("ReInit %d time", tru);
-
-            MPU_6050_Init();// 可以尝试 直接打开FIFO
-
-            HAL_Delay(100);
-            //初始化DMP
-            DMP_INT_FLAG = mpu_dmp_init();
-
-            if (DMP_INT_FLAG == 0) {
-                printfEx("Loading completed");
-                HAL_Delay(100);
-                break;
-            } else {
-                printfEx("ReInit %d time", tru);
-                tru++;
-            }
-        }
-    } else {
-        printfEx("Loading completed");
-    }
+    MPU_6050_Init_Ex();
 
     /* USER CODE END 2 */
 

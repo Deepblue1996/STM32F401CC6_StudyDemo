@@ -47,4 +47,6 @@ unsigned char mpu_dmp_init(void);
 
 unsigned char mpu_dmp_get_data(float *pitch, float *roll, float *yaw);
 
+void MPU_6050_Init_Ex(void);
+
 #endif //HELLOSTM_MPU6050_H

@@ -7,6 +7,7 @@
 #include "mpu6050.h"
 #include <math.h>
 #include <tim.h>
+#include <LCD1602.h>
 
 #include "eMPL/inv_mpu.h"
 #include "eMPL/inv_mpu_dmp_motion_driver.h"
@@ -25,6 +26,51 @@ unsigned short inv_orientation_matrix_to_scalar(
 unsigned char run_self_test(void);
 
 unsigned short inv_row_2_scale(const signed char *row);
+
+void MPU_6050_Init_Ex(void) {
+
+    unsigned char DMP_INT_FLAG = 0;
+
+    //LCD1602_Show_Str(0, 0, "Mpu6050 Init");
+    printfEx("Mpu6050 Init");
+
+    HAL_Delay(50);
+
+    MPU_6050_Init();// 可以尝试 直接打开FIFO
+
+    HAL_Delay(50);
+    //初始化DMP
+    DMP_INT_FLAG = mpu_dmp_init();
+
+    LCD1602_ClearScreen();
+    if (DMP_INT_FLAG != 0) {
+        int tru = 1;
+        printfEx("DMP_INT_FLAG %d", DMP_INT_FLAG);
+        while (1) {
+            HAL_Delay(50);
+
+            printfEx("ReInit %d time", tru);
+
+            MPU_6050_Init();// 可以尝试 直接打开FIFO
+
+            HAL_Delay(50);
+            //初始化DMP
+            DMP_INT_FLAG = mpu_dmp_init();
+
+            if (DMP_INT_FLAG == 0) {
+                printfEx("Loading completed");
+                HAL_Delay(50);
+                break;
+            } else {
+                printfEx("ReInit %d time", tru);
+                tru++;
+            }
+        }
+    } else {
+        printfEx("Loading completed");
+    }
+
+}
 
 void MPU_6050_Init(void) {
     HAL_StatusTypeDef status;
