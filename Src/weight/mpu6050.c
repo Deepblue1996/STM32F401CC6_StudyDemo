@@ -34,11 +34,11 @@ void MPU_6050_Init_Ex(void) {
     //LCD1602_Show_Str(0, 0, "Mpu6050 Init");
     printfEx("Mpu6050 Init");
 
-    HAL_Delay(50);
+    HAL_Delay(100);
 
     MPU_6050_Init();// 可以尝试 直接打开FIFO
 
-    HAL_Delay(50);
+    HAL_Delay(100);
     //初始化DMP
     DMP_INT_FLAG = mpu_dmp_init();
 
@@ -47,19 +47,19 @@ void MPU_6050_Init_Ex(void) {
         int tru = 1;
         printfEx("DMP_INT_FLAG %d", DMP_INT_FLAG);
         while (1) {
-            HAL_Delay(50);
+            HAL_Delay(100);
 
             printfEx("ReInit %d time", tru);
 
             MPU_6050_Init();// 可以尝试 直接打开FIFO
 
-            HAL_Delay(50);
+            HAL_Delay(100);
             //初始化DMP
             DMP_INT_FLAG = mpu_dmp_init();
 
             if (DMP_INT_FLAG == 0) {
                 printfEx("Loading completed");
-                HAL_Delay(50);
+                HAL_Delay(100);
                 break;
             } else {
                 printfEx("ReInit %d time", tru);
