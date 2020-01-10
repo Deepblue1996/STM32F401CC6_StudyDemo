@@ -33,20 +33,19 @@ void LCD_EN_Clr(){
     HAL_GPIO_WritePin(GPIOB, e_Pin, GPIO_PIN_RESET);
 }
 
-int GetBit(char c,int i)//取c的第i位
-{
+int GetBit(char c,int i) {
     return ( c >> i ) & 1;
 }
 
 void DATAOUT(unsigned char CMD) {
-    HAL_GPIO_WritePin(GPIOA, P0, GetBit(CMD, 0));
-    HAL_GPIO_WritePin(GPIOA, P1, GetBit(CMD, 1));
-    HAL_GPIO_WritePin(GPIOA, P2, GetBit(CMD, 2));
-    HAL_GPIO_WritePin(GPIOB, P3, GetBit(CMD, 3));
-    HAL_GPIO_WritePin(GPIOB, P4, GetBit(CMD, 4));
-    HAL_GPIO_WritePin(GPIOB, P5, GetBit(CMD, 5));
-    HAL_GPIO_WritePin(GPIOB, P6, GetBit(CMD, 6));
-    HAL_GPIO_WritePin(GPIOB, P7, GetBit(CMD, 7));
+    HAL_GPIO_WritePin(p0_GPIO_Port, P0, GetBit(CMD, 0));
+    HAL_GPIO_WritePin(p1_GPIO_Port, P1, GetBit(CMD, 1));
+    HAL_GPIO_WritePin(p2_GPIO_Port, P2, GetBit(CMD, 2));
+    HAL_GPIO_WritePin(p3_GPIO_Port, P3, GetBit(CMD, 3));
+    HAL_GPIO_WritePin(p4_GPIO_Port, P4, GetBit(CMD, 4));
+    HAL_GPIO_WritePin(p5_GPIO_Port, P5, GetBit(CMD, 5));
+    HAL_GPIO_WritePin(p6_GPIO_Port, P6, GetBit(CMD, 6));
+    HAL_GPIO_WritePin(p7_GPIO_Port, P7, GetBit(CMD, 7));
 }
 
 /* 检测液晶忙不忙 */

@@ -83,8 +83,16 @@ void Error_Handler(void);
 #define U1_TX_GPIO_Port GPIOA
 #define U1_RX_Pin GPIO_PIN_10
 #define U1_RX_GPIO_Port GPIOA
+#define i4_Pin GPIO_PIN_15
+#define i4_GPIO_Port GPIOA
+#define i3_Pin GPIO_PIN_3
+#define i3_GPIO_Port GPIOB
+#define i2_Pin GPIO_PIN_4
+#define i2_GPIO_Port GPIOB
 #define e_Pin GPIO_PIN_5
 #define e_GPIO_Port GPIOB
+#define i1_Pin GPIO_PIN_8
+#define i1_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */

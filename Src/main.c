@@ -24,7 +24,6 @@
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
-#include "stdarg.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -54,12 +53,91 @@ void SystemClock_Config(void);
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
+
+/* USER CODE END PV */
+
+/* Private function prototypes -----------------------------------------------*/
+void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 float pitch, roll, yaw;        //欧拉角
+
+void writeMotor(unsigned char CMD) {
+    HAL_GPIO_WritePin(i1_GPIO_Port, i1_Pin, GetBit(CMD, 0));
+    HAL_GPIO_WritePin(i2_GPIO_Port, i2_Pin, GetBit(CMD, 1));
+    HAL_GPIO_WritePin(i3_GPIO_Port, i3_Pin, GetBit(CMD, 2));
+    HAL_GPIO_WritePin(i4_GPIO_Port, i4_Pin, GetBit(CMD, 3));
+}
+
+void motor_delay(uint32_t delay) {
+    uint32_t i;
+    for (i = 1; i < delay; i++) {
+        asm("nop");
+    }
+}
+
+/**
+ * 逆时针
+ * @param circle
+ * @param delay
+ */
+void motor_cw(uint32_t circle, uint32_t delay)//circle循环数 delay控制转速
+{
+    uint32_t i, j;
+    j = 6000;
+    for (i = 0; i <= circle; i++) {
+        writeMotor(8);
+        motor_delay(j);
+        writeMotor(12);
+        motor_delay(j);
+        writeMotor(4);
+        motor_delay(j);
+        writeMotor(6);
+        motor_delay(j);
+        writeMotor(2);
+        motor_delay(j);
+        writeMotor(3);
+        motor_delay(j);
+        writeMotor(1);
+        motor_delay(j);
+        writeMotor(9);
+        motor_delay(j);
+        motor_delay(delay);//这个控制转速
+    }
+}
+
+/**
+ * 顺时针
+ * @param circle
+ * @param delay
+ */
+void motor_ccw(uint32_t circle, uint32_t delay) {
+    uint32_t i, j;
+    j = 6000;
+    for (i = 0; i <= circle; i++) {
+        writeMotor(9);
+        motor_delay(j);
+        writeMotor(1);
+        motor_delay(j);
+        writeMotor(3);
+        motor_delay(j);
+        writeMotor(2);
+        motor_delay(j);
+        writeMotor(6);
+        motor_delay(j);
+        writeMotor(4);
+        motor_delay(j);
+        writeMotor(12);
+        motor_delay(j);
+        writeMotor(8);
+        motor_delay(j);
+        motor_delay(delay);//这个控制转速
+    }
+}
+
 /* USER CODE END 0 */
 
 /**
@@ -102,6 +180,7 @@ int main(void) {
 
     MPU_6050_Init_Ex();
 
+    motor_ccw(510, 1);
     /* USER CODE END 2 */
 
     /* Infinite loop */
